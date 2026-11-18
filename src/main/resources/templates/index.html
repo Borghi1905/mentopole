@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Mentópole</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500&family=JetBrains+Mono:wght@400&family=Big+Shoulders+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/mentopole.css" th:href="@{/css/mentopole.css}">
+</head>
+<body class="home lock">
+<div id="load" role="status" aria-live="polite">
+    <div class="ld-top"><span class="eyebrow">// carregando a experiência</span><span class="ld-n"><b id="lpc">0</b><s>%</s></span></div>
+    <div class="ld-word" id="ldw" aria-hidden="true"><span style="--i:0">M</span><span style="--i:1">E</span><span style="--i:2">N</span><span style="--i:3">T</span><span style="--i:4">Ó</span><span style="--i:5">P</span><span style="--i:6">O</span><span style="--i:7">L</span><span style="--i:8">E</span></div>
+    <div class="ld-bot"><span class="ld-lab" id="lp">preparando…</span><div class="lgo hide" id="lgo"><button class="ld-cta" id="go1"><span>Entrar</span><em>com som</em></button><button class="ld-alt" id="go0">entrar sem som</button></div></div>
+    <div class="lbw"><u id="lbar"></u></div>
+</div>
+<canvas id="c" aria-label="Cérebro tridimensional pairando sobre um oceano escuro. O conteúdo das seções está disponível em texto abaixo."></canvas>
+<div id="prog" aria-hidden="true"><i></i></div><div class="uw" id="uw"></div><div class="vig"></div><div class="grain"></div>
+<header>
+    <a class="logo" href="#home" th:href="@{#home}" aria-label="Mentópole">MENTÓPOLE</a>
+    <nav aria-label="Principal"><a href="#home" th:href="@{#home}">Início</a><a href="#cidade" th:href="@{#cidade}">Problemas da cidade</a><a href="#bem-estar" th:href="@{#bem-estar}" id="navAcc" th:text="${usuarioNome} ?: 'Entrar'">Entrar</a><a href="#apoio" th:href="@{#apoio}">Áreas e apoio</a><a href="#" id="navMap">Por região</a><a href="#" data-ap="territorio">Território</a><a href="#" data-ap="servicos">Serviços</a><a href="#" data-ap="relatar">Relatar problema</a></nav>
+    <div class="hub" id="hubH"></div>
+</header>
+<div class="cr" id="cr"><b>////// Manifesto</b>Mostrar como o território em que vivemos molda a saúde mental: ruído, ar, distância, insegurança e solidão entram pela rotina.</div>
+<div class="hint" id="hint">Passe o cursor sobre a mente. Role para fragmentá-la.</div>
+<button class="snd" id="snd" aria-pressed="false" aria-label="Alternar som"><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lab">Som</span><span class="st" aria-hidden="true"><u>off</u><u>on</u></span></button>
+<main>
+    <section id="home" style="min-height:380vh" aria-label="Início: o cérebro. Role a página para continuar."></section>
+
+    <section id="cidade" class="R"><div class="card bg big">
+        <span class="eyebrow">// 01 · território</span><h2>Problemas<br><em>da cidade</em></h2>
+        <p>Escolha um fator para ler o contexto e a fonte. A câmera se reposiciona ao redor da mente.</p>
+        <div class="chips" id="chips" role="group" aria-label="Fatores urbanos"><button type="button" class="chip" aria-pressed="false" th:each="categoria : ${categoriasProblema}" th:text="${categoria.nome}" th:attr="data-titulo=${categoria.nome},data-texto=${categoria.descricao}"></button></div>
+        <div id="info" aria-live="polite"></div>
+        <p class="sm" style="margin-top:18px">Dados de contexto: a OMS estimava cerca de 280 milhões de pessoas com depressão no mundo (nota informativa da OMS, 2023). No Brasil, a Pesquisa Nacional de Saúde 2019 (IBGE) apontou 10,2% dos adultos com diagnóstico referido de depressão. Confira sempre a fonte original: <a href="https://www.who.int/news-room/fact-sheets/detail/depression" target="_blank" rel="noopener">OMS</a> · <a href="https://www.ibge.gov.br/estatisticas/sociais/saude/9160-pesquisa-nacional-de-saude.html" target="_blank" rel="noopener">IBGE PNS</a>. As relações entre ambiente e saúde mental são associações estudadas, não causas únicas.</p>
+    </div></section>
+
+    <div class="spacer" aria-hidden="true"></div>
+    <section id="bem-estar"><div class="card bg big">
+        <span class="eyebrow">// 02 · você</span><h2>Entrar<br>na <em>plataforma</em></h2>
+        <div id="authSec"></div>
+        <div hidden><div id="reg" th:classappend="${usuarioNome != null} ? 'hide'">
+            <p>Crie um perfil para registrar seu questionário. Seus dados ficam apenas neste navegador (armazenamento local) e não são enviados a nenhum servidor.</p>
+
+            <form id="f" novalidate method="post" th:action="@{/auth/register}">
+                <label for="nm">Nome ou apelido</label><input id="nm" autocomplete="nickname" required maxlength="60">
+                <label for="em">E-mail (opcional)</label><input id="em" type="email" autocomplete="email" maxlength="120">
+                <label for="id">Faixa etária</label><select id="id" required><option value="">Selecione</option><option>Menos de 18</option><option>18 a 29</option><option>30 a 44</option><option>45 a 59</option><option>60 ou mais</option></select>
+                <label class="chk" for="ok"><input type="checkbox" id="ok" required>Concordo em guardar estas informações localmente, conforme a LGPD. Posso apagá-las a qualquer momento.</label>
+                <div id="ferr" class="sm" role="alert" style="color:#ff8a9b;margin-bottom:10px" th:text="${erroCadastro}"></div>
+                <button class="btn" type="submit">Começar questionário</button>
+            </form></div>
+            <div id="quiz" class="hide">
+                <p id="hi" th:text="${usuarioNome != null ? 'Olá, ' + usuarioNome + '.' : ''}"></p>
+                <p class="sm">Nas últimas duas semanas, com que frequência isso aconteceu? Este questionário é uma reflexão pessoal e não substitui avaliação profissional.</p>
+                <div class="prog"><i id="pb"></i></div>
+                <form id="qf" method="post" th:action="@{/questionario/enviar}"><fieldset class="q" style="border:0;padding:0;margin:0 0 20px" th:each="pergunta, perguntaStat : ${perguntas}"><legend class="q" th:text="${pergunta}"></legend><div class="opts"><label><input type="radio" th:name="'q' + ${perguntaStat.index}" value="0"><span>Nunca</span></label><label><input type="radio" th:name="'q' + ${perguntaStat.index}" value="1"><span>Alguns dias</span></label><label><input type="radio" th:name="'q' + ${perguntaStat.index}" value="2"><span>Mais da metade dos dias</span></label><label><input type="radio" th:name="'q' + ${perguntaStat.index}" value="3"><span>Quase todos os dias</span></label></div></fieldset><button class="btn" type="submit">Ver orientação</button></form>
+            </div>
+            <div id="out" class="hide" aria-live="polite"></div>
+            <p class="sm" style="margin-top:18px"><button class="tg" id="wipe" style="padding:6px 0">Apagar meus dados deste navegador</button></p></div>
+    </div></section>
+
+    <div class="spacer" aria-hidden="true"></div>
+    <section id="apoio" class="R"><div class="card bg big">
+        <span class="eyebrow">// 03 · cuidado</span><h2>Áreas<br><em>e apoio</em></h2>
+        <p>Em crise ou precisando conversar agora, ligue gratuitamente para o <b>CVV, 188</b> (24 horas), ou para o <b>SAMU, 192</b>, em emergência.</p>
+        <label for="need">O que você procura?</label>
+        <select id="need"><option value="a">Preciso de ajuda agora</option><option value="b">Acompanhamento contínuo (psicólogo, psiquiatra)</option><option value="c">Primeiro atendimento ou orientação</option></select>
+        <label for="city">Sua cidade e UF</label><input id="city" placeholder="Ex.: Osasco SP" maxlength="80">
+        <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="find">Ver serviços</button></div>
+        <div class="svc" id="svc" aria-live="polite"></div>
+        <p class="sm" style="margin-top:20px"><b>Vulnerabilidade territorial:</b> consulte o Índice de Vulnerabilidade Social do Ipea (<a href="https://ivs.ipea.gov.br/" target="_blank" rel="noopener">Atlas IVS</a>) e a base de estabelecimentos de saúde do <a href="https://cnes.datasus.saude.gov.br/" target="_blank" rel="noopener">CNES/DataSUS</a>. Não reproduzimos números aqui sem data de referência verificada: cada fonte informa o ano dos seus dados.</p>
+    </div></section>
+    <div class="spacer" aria-hidden="true"></div>
+</main>
+<footer id="footer" aria-label="Rodapé">
+    <div class="fstick">
+        <div class="fgrid">
+            <div class="fmsg" id="fmsg">
+                <span class="eyebrow">// 04 · para continuar</span>
+                <h2>Você não precisa<br><em>carregar tudo sozinho.</em></h2>
+                <p>O barulho, a pressa e a distância pesam em todo mundo, e sentir isso não é fraqueza. Respire fundo, beba água e conte a alguém de confiança como você está. Pedir ajuda é um começo, e existe cuidado perto de você.</p>
+                <div class="fbtn"><a class="btn" href="#apoio" th:href="@{#apoio}">Encontrar apoio</a><a class="btn g" href="tel:188">Ligar para o CVV · 188</a></div>
+                <p class="sm">Em crise, ligue 188 (CVV, 24 horas) ou 192 (SAMU).</p>
+            </div>
+        </div>
+        <div class="fbig" aria-hidden="true">MENTÓPOLE</div>
+        <div class="fend"><span class="sm">Mentópole · Global Solution FIAP 2026 · Conteúdo informativo, não substitui atendimento profissional.</span><button class="tg" data-ap="conta">Conta e painéis</button><button class="tg" id="toTop">Voltar ao início ↑</button></div>
+    </div>
+</footer>
+<button class="gcard" id="gcard" type="button" aria-label="Abrir o mapa: saúde mental por região"><span class="gtab">// MAPA</span><canvas class="gcv" id="gcv" aria-hidden="true"></canvas><span class="gdiv"></span><span class="gl1">SAÚDE MENTAL</span><span class="gl2">POR REGIÃO</span><span class="garr" aria-hidden="true">↗</span></button>
+<div id="mapov" role="dialog" aria-modal="true" aria-labelledby="mapT" aria-hidden="true"><div class="mo-in">
+    <div class="mo-head"><div><span class="eyebrow">// 04 · mundo</span><h2 id="mapT">Saúde mental<br><em>por região</em></h2></div><button class="mo-x" id="mapX" type="button" aria-label="Fechar o mapa"><span></span><span></span></button></div>
+    <div class="mo-ban" id="mapBan" role="status"></div>
+    <div class="mo-grid">
+        <aside class="mo-side"><h3>Indicador</h3><div class="mo-tabs" id="mapTabs" role="tablist"></div><p class="mo-desc" id="mapDesc"></p>
+            <div class="mo-imp"><label class="btn g mo-file">Carregar dados (JSON)<input type="file" id="mapFile" accept="application/json,.json" hidden></label><button class="tg" id="mapRst" type="button" hidden>Voltar ao demonstrativo</button><details><summary>Formato esperado</summary><pre id="mapFmt"></pre></details><p class="sm" id="mapMsg" role="status"></p></div></aside>
+        <div class="mo-map"><div class="mo-cv"><canvas id="mapCv" aria-label="Mapa-múndi de pontos, colorido por região"></canvas><div class="mo-tip" id="mapTip" hidden></div></div>
+            <div class="mo-leg"><span>menor</span><i class="mo-bar"></i><span>maior</span><span class="mo-nd"><i></i>sem dados</span><span class="mo-note" id="mapLegN"></span></div></div>
+        <section class="mo-panel" id="mapPanel" aria-live="polite"></section>
+    </div></div></div>
+<div id="appov" role="dialog" aria-modal="true" aria-labelledby="apT" aria-hidden="true"><div class="mo-in">
+    <div class="mo-head"><div><span class="eyebrow">// plataforma</span><h2 id="apT">Entrar</h2></div><div class="mo-act"><div class="hub" id="hubO"></div><button class="mo-x" id="apX" type="button" aria-label="Fechar"><span></span><span></span></button></div></div>
+    <div class="mo-ban" id="apBan" role="status" hidden></div>
+    <div class="mo-tabs" id="apTabs" role="tablist"></div>
+    <div id="apBody"></div></div></div>
+<div id="fade" aria-hidden="true"></div>
+<noscript><div class="noscript">Mentópole precisa de JavaScript e WebGL. Em crise, ligue 188 (CVV) ou 192 (SAMU).</div></noscript>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script th:inline="javascript">
+    window.MP_ASSETS = {
+        mp3: /*[[@{/audio/mentopole.mp3}]]*/ '/audio/mentopole.mp3',
+        glb: /*[[@{/models/cerebro.glb}]]*/ '/models/cerebro.glb',
+        glb2: /*[[@{/models/figura.glb}]]*/ '/models/figura.glb'
+    };
+
+</script>
+
+<script src="/js/mentopole-cena.js" th:src="@{/js/mentopole-cena.js}"></script>
+<script src="/js/mentopole-app.js" th:src="@{/js/mentopole-app.js}"></script>
+

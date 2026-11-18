@@ -1,0 +1,15 @@
+# Credenciais e configurações locais
+env
+.env
+*.env
+
+# Arquivos gerados pelo Maven
+target/
+
+# Configurações da IDE
+.idea/
+*.iml
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
